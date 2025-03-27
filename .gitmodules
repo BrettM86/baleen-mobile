@@ -1,0 +1,3 @@
+[submodule "baleen_mobile/packages/lemmy_api_client"]
+	path = baleen_mobile/packages/lemmy_api_client
+	url = https://github.com/thunder-app/lemmy_api_client

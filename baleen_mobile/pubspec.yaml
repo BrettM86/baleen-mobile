@@ -32,6 +32,9 @@ dependencies:
     sdk: flutter
   lemmy_api_client:
     path: packages/lemmy_api_client
+  
+  html: ^0.15.1
+  url_launcher: ^6.1.10
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.

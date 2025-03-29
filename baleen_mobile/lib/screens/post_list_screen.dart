@@ -75,8 +75,8 @@ class _PostListScreenState extends State<PostListScreen> {
     });
 
     try {
-      // Check if it's a Lemmy image
-      if (url.contains('lemmy.world') || url.contains('lemmy.ml')) {
+      // Check if it's a Lemmy image via pictrs usage
+      if (url.contains('pictrs')) {
         setState(() {
           _linkPreviews[url] = {
             'imageUrl': url,
@@ -315,9 +315,9 @@ class _PostListScreenState extends State<PostListScreen> {
                     ),
                     const SizedBox(height: 16),
                     
-                    // Link Preview (replacing the old image display)
+                    // Image or Link Preview
                     if (post.imageUrl != null) ...[
-                      _buildLinkPreview(post.imageUrl!),
+                      _buildImageOrLinkPreview(post.imageUrl!),
                       const SizedBox(height: 16),
                     ],
                     
@@ -345,11 +345,31 @@ class _PostListScreenState extends State<PostListScreen> {
     );
   }
 
-  // Build link preview
-  Widget _buildLinkPreview(String url) {
+  Widget _buildImageOrLinkPreview(String url) {
     final preview = _linkPreviews[url];
     final isLoading = _loadingStates[url] == true;
     
+    // If it's a Lemmy image, show it as a full-width image
+    if (preview != null && preview['isLemmyImage'] == true) {
+      return ClipRRect(
+        borderRadius: BorderRadius.circular(12),
+        child: Image.network(
+          preview['imageUrl']!,
+          fit: BoxFit.contain,
+          width: double.infinity,
+          height: 300,
+          errorBuilder: (context, error, stackTrace) {
+            return Container(
+              height: 200,
+              color: Colors.grey[800],
+              child: const Icon(Icons.error, color: Colors.white),
+            );
+          },
+        ),
+      );
+    }
+    
+    // For external links, show the preview container
     return GestureDetector(
       onTap: () async {
         if (await canLaunch(url)) {
@@ -371,23 +391,6 @@ class _PostListScreenState extends State<PostListScreen> {
                 height: 200,
                 color: Colors.grey[800],
                 child: const Center(child: CircularProgressIndicator()),
-              )
-            else if (preview != null && preview['isLemmyImage'] == true)
-              ClipRRect(
-                borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
-                child: Image.network(
-                  preview['imageUrl']!,
-                  fit: BoxFit.cover,
-                  width: double.infinity,
-                  height: 200,
-                  errorBuilder: (context, error, stackTrace) {
-                    return Container(
-                      height: 200,
-                      color: Colors.grey[800],
-                      child: const Icon(Icons.error, color: Colors.white),
-                    );
-                  },
-                ),
               )
             else if (preview != null && preview['imageUrl'] != null)
               ClipRRect(
@@ -528,11 +531,11 @@ class _PostListScreenState extends State<PostListScreen> {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon, color: Colors.black),
+          Icon(icon, color: Colors.white),
           const SizedBox(height: 4),
           Text(
             label,
-            style: const TextStyle(color: Colors.black),
+            style: const TextStyle(color: Colors.white),
           ),
         ],
       ),

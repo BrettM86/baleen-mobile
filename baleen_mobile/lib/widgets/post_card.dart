@@ -129,7 +129,7 @@ class PostCard extends StatelessWidget {
                                       border: Border.all(color: AppColors.border),
                                     ),
                                     child: const Text(
-                                      'Read More',
+                                      'Expand',
                                       style: TextStyle(
                                         color: AppColors.primary,
                                         fontSize: 12,

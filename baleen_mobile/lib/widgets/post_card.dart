@@ -273,7 +273,6 @@ class PostCard extends StatelessWidget {
                 ),
               ),
             ),
-            ),
             
             // Side action widgets
             Positioned(

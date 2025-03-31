@@ -28,6 +28,15 @@ class Post {
   });
 
   factory Post.fromLemmyPost(PostView postView) {
+    // Extract instance name from actorId which is a URI
+    String instanceName = '';
+    try {
+      final actorIdUri = Uri.parse(postView.community.actorId);
+      instanceName = actorIdUri.host;
+    } catch (e) {
+      // If parsing fails, leave instanceName as empty string
+    }
+    
     return Post(
       id: postView.post.id,
       communityId: postView.community.id,
@@ -39,7 +48,7 @@ class Post {
       published: postView.post.published,
       score: postView.counts.score,
       commentCount: postView.counts.comments,
-      instanceName: postView.community.actorId.host ?? '',
+      instanceName: instanceName,
     );
   }
 }

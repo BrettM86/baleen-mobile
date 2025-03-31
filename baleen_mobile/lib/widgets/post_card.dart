@@ -98,6 +98,28 @@ class PostCard extends StatelessWidget {
                       const SizedBox(height: 2),
                     ],
                     
+                    // Excerpt / Body Snippet with Markdown
+                    if (post.content.isNotEmpty) ...[
+                      MarkdownText(
+                        data: post.content,
+                        style: const TextStyle(
+                          color: AppColors.textPrimary,
+                          fontSize: 16,
+                          height: 1.5,
+                        ),
+                        maxLines: 5,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      const SizedBox(height: 16),
+                    ],
+                    
+                    // Divider
+                    Container(
+                      height: 1,
+                      margin: const EdgeInsets.symmetric(vertical: 2),
+                      color: AppColors.divider,
+                    ),
+                    
                     // Post Metadata Section
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
@@ -185,28 +207,6 @@ class PostCard extends StatelessWidget {
                         ],
                       ),
                     ),
-                    
-                    // Divider
-                    Container(
-                      height: 1,
-                      margin: const EdgeInsets.symmetric(vertical: 2),
-                      color: AppColors.divider,
-                    ),
-                    
-                    // Excerpt / Body Snippet with Markdown
-                    if (post.content.isNotEmpty) ...[
-                      MarkdownText(
-                        data: post.content,
-                        style: const TextStyle(
-                          color: AppColors.textPrimary,
-                          fontSize: 16,
-                          height: 1.5,
-                        ),
-                        maxLines: 5,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      const SizedBox(height: 16),
-                    ],
                   ],
                 ),
               ),

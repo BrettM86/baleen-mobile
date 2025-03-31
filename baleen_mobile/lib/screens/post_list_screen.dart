@@ -7,6 +7,7 @@ import '../widgets/post_card.dart';
 import '../widgets/side_actions.dart';
 import '../widgets/error_view.dart';
 import '../widgets/loading_view.dart';
+import '../constants/app_colors.dart';
 
 class PostListScreen extends StatefulWidget {
   const PostListScreen({super.key});
@@ -83,8 +84,8 @@ class _PostListScreenState extends State<PostListScreen> {
         currentIndex: _selectedIndex,
         onTap: _onBottomNavTap,
         selectedItemColor: Theme.of(context).colorScheme.primary,
-        unselectedItemColor: Colors.grey,
-        backgroundColor: const Color(0xFF1A1A1A),
+        unselectedItemColor: AppColors.textSecondary,
+        backgroundColor: AppColors.background,
         items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.home),

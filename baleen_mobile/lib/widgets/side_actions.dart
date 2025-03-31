@@ -58,7 +58,7 @@ class SideActions extends StatelessWidget {
         children: [
           Icon(
             icon,
-            color: Colors.white.withAlpha(230),
+            color: AppColors.textPrimary.withAlpha(230),
             size: 28,
             shadows: [
               Shadow(
@@ -72,7 +72,7 @@ class SideActions extends StatelessWidget {
           Text(
             label,
             style: TextStyle(
-              color: Colors.white,
+              color: AppColors.textPrimary,
               shadows: [
                 Shadow(
                   color: Colors.black.withAlpha(77),

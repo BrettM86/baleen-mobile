@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'screens/post_list_screen.dart';
 import 'constants/app_theme.dart';
+import 'navigation/app_router.dart';
 
 void main() {
   runApp(const BaleenApp());
@@ -14,7 +14,8 @@ class BaleenApp extends StatelessWidget {
     return MaterialApp(
       title: 'Baleen',
       theme: AppTheme.darkTheme,
-      home: const PostListScreen(),
+      initialRoute: AppRouter.home,
+      onGenerateRoute: AppRouter.generateRoute,
       debugShowCheckedModeBanner: false,
     );
   }

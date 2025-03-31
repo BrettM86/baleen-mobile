@@ -116,27 +116,45 @@ class PostCard extends StatelessWidget {
                                 overflow: TextOverflow.ellipsis,
                               ),
                               if (post.content.split('\n').length > 5 || post.content.length > 300) ...[
-                                const SizedBox(height: 8),
-                                GestureDetector(
-                                  onTap: () {
-                                    // TODO: Implement read more functionality
-                                  },
-                                  child: Container(
-                                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                                    decoration: BoxDecoration(
-                                      color: AppColors.cardBackground,
-                                      borderRadius: BorderRadius.circular(4),
-                                      border: Border.all(color: AppColors.border),
-                                    ),
-                                    child: const Text(
-                                      'Expand',
-                                      style: TextStyle(
-                                        color: AppColors.primary,
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.w500,
+                                Stack(
+                                  alignment: Alignment.bottomCenter,
+                                  children: [
+                                    Container(
+                                      height: 30,
+                                      decoration: BoxDecoration(
+                                        gradient: LinearGradient(
+                                          begin: Alignment.topCenter,
+                                          end: Alignment.bottomCenter,
+                                          colors: [
+                                            AppColors.background.withOpacity(0.0),
+                                            AppColors.background.withOpacity(0.9),
+                                          ],
+                                        ),
                                       ),
                                     ),
-                                  ),
+                                    GestureDetector(
+                                      onTap: () {
+                                        // TODO: Implement read more functionality
+                                      },
+                                      child: Container(
+                                        margin: const EdgeInsets.only(bottom: 4),
+                                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                                        decoration: BoxDecoration(
+                                          color: AppColors.cardBackground,
+                                          borderRadius: BorderRadius.circular(4),
+                                          border: Border.all(color: AppColors.border),
+                                        ),
+                                        child: const Text(
+                                          'Expand',
+                                          style: TextStyle(
+                                            color: AppColors.primary,
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ],
                             ],

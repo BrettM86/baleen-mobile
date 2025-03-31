@@ -1,22 +1,21 @@
 import 'package:flutter/material.dart';
 import 'screens/post_list_screen.dart';
+import 'constants/app_theme.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(const BaleenApp());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class BaleenApp extends StatelessWidget {
+  const BaleenApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Baleen',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-        useMaterial3: true,
-      ),
+      theme: AppTheme.darkTheme,
       home: const PostListScreen(),
+      debugShowCheckedModeBanner: false,
     );
   }
 }

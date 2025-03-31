@@ -1,16 +1,40 @@
-# baleen_mobile
+# Baleen Mobile
 
-A new Flutter project.
+A Flutter mobile client for Lemmy, the federated link aggregator.
+
+## Project Structure
+
+```
+lib/
+├── constants/       # App-wide constants like colors, themes, etc.
+├── models/          # Data models
+├── navigation/      # Navigation/routing related code
+├── providers/       # State management providers
+├── repositories/    # Data repositories
+├── screens/         # UI screens
+├── services/        # Services for API calls, local storage, etc.
+├── utils/           # Utility functions and helpers
+├── widgets/         # Reusable UI components
+└── main.dart        # Entry point
+```
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+1. Ensure you have Flutter installed and set up
+2. Clone this repository
+3. Run `flutter pub get` to install dependencies
+4. Run `flutter run` to start the app
 
-A few resources to get you started if this is your first Flutter project:
+## Features
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+- Browse posts from Lemmy instances
+- View post details and comments
+- Upvote/downvote posts and comments
+- Create new posts and comments
+- Search for communities and posts
+- User authentication
+- Customizable themes and settings
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.

@@ -11,6 +11,7 @@ class Post {
   final DateTime published;
   final int score;
   final int commentCount;
+  final String instanceName;
 
   Post({
     required this.id,
@@ -23,6 +24,7 @@ class Post {
     required this.published,
     required this.score,
     required this.commentCount,
+    this.instanceName = '',
   });
 
   factory Post.fromLemmyPost(PostView postView) {
@@ -37,6 +39,7 @@ class Post {
       published: postView.post.published,
       score: postView.counts.score,
       commentCount: postView.counts.comments,
+      instanceName: postView.community.actorId.host ?? '',
     );
   }
-} 
+}

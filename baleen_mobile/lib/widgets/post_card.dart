@@ -105,58 +105,66 @@ class PostCard extends StatelessWidget {
                           return Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              MarkdownText(
-                                data: post.content,
-                                style: const TextStyle(
-                                  color: AppColors.textPrimary,
-                                  fontSize: 13,
-                                  height: 1.5,
-                                ),
-                                maxLines: 5,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                              if (post.content.split('\n').length > 5 || post.content.length > 300) ...[
-                                Stack(
-                                  alignment: Alignment.bottomCenter,
-                                  children: [
-                                    Container(
-                                      height: 30,
-                                      decoration: BoxDecoration(
-                                        gradient: LinearGradient(
-                                          begin: Alignment.topCenter,
-                                          end: Alignment.bottomCenter,
-                                          colors: [
-                                            AppColors.background.withOpacity(0.0),
-                                            AppColors.background.withOpacity(0.9),
-                                          ],
-                                        ),
-                                      ),
+                              Stack(
+                                children: [
+                                  MarkdownText(
+                                    data: post.content,
+                                    style: const TextStyle(
+                                      color: AppColors.textPrimary,
+                                      fontSize: 13,
+                                      height: 1.5,
                                     ),
-                                    GestureDetector(
-                                      onTap: () {
-                                        // TODO: Implement read more functionality
-                                      },
+                                    maxLines: 8,
+                                    overflow: TextOverflow.fade,
+                                  ),
+                                  if (post.content.split('\n').length > 5 || post.content.length > 300)
+                                    Positioned(
+                                      left: 0,
+                                      right: 0,
+                                      bottom: 0,
                                       child: Container(
-                                        margin: const EdgeInsets.only(bottom: 4),
-                                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                                        height: 60,
                                         decoration: BoxDecoration(
-                                          color: AppColors.cardBackground,
-                                          borderRadius: BorderRadius.circular(4),
-                                          border: Border.all(color: AppColors.border),
+                                          gradient: LinearGradient(
+                                            begin: Alignment.topCenter,
+                                            end: Alignment.bottomCenter,
+                                            colors: [
+                                              AppColors.background.withOpacity(0.0),
+                                              AppColors.background.withOpacity(0.8),
+                                              AppColors.background,
+                                            ],
+                                            stops: const [0.0, 0.7, 1.0],
+                                          ),
                                         ),
-                                        child: const Text(
-                                          'Expand',
-                                          style: TextStyle(
-                                            color: AppColors.primary,
-                                            fontSize: 12,
-                                            fontWeight: FontWeight.w500,
+                                        alignment: Alignment.bottomCenter,
+                                        child: Padding(
+                                          padding: const EdgeInsets.only(bottom: 8),
+                                          child: GestureDetector(
+                                            onTap: () {
+                                              // TODO: Implement read more functionality
+                                            },
+                                            child: Container(
+                                              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                                              decoration: BoxDecoration(
+                                                color: AppColors.cardBackground,
+                                                borderRadius: BorderRadius.circular(4),
+                                                border: Border.all(color: AppColors.border),
+                                              ),
+                                              child: const Text(
+                                                'Expand',
+                                                style: TextStyle(
+                                                  color: AppColors.primary,
+                                                  fontSize: 12,
+                                                  fontWeight: FontWeight.w500,
+                                                ),
+                                              ),
+                                            ),
                                           ),
                                         ),
                                       ),
                                     ),
-                                  ],
-                                ),
-                              ],
+                                ],
+                              ),
                             ],
                           );
                         },

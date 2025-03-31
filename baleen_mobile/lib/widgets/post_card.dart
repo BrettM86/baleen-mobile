@@ -36,8 +36,8 @@ class PostCard extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: Row(
-                children: [
-                  CircleAvatar(
+                    children: [
+                      CircleAvatar(
                     backgroundColor: Theme.of(context).colorScheme.primary,
                     radius: 24,
                     child: Text(

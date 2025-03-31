@@ -533,7 +533,7 @@ class _PostListScreenState extends State<PostListScreen> {
         children: [
           Icon(
             icon,
-            color: Colors.white,
+            color: Colors.white.withOpacity(0.9),
             size: 28,
             shadows: [
               Shadow(

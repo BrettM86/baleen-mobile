@@ -5,6 +5,7 @@ import '../models/post.dart';
 import '../utils/time_utils.dart';
 import '../utils/url_utils.dart';
 import '../constants/app_colors.dart';
+import 'markdown_text.dart';
 
 class PostCard extends StatelessWidget {
   final Post post;
@@ -192,10 +193,10 @@ class PostCard extends StatelessWidget {
                       color: AppColors.divider,
                     ),
                     
-                    // Excerpt / Body Snippet
+                    // Excerpt / Body Snippet with Markdown
                     if (post.content.isNotEmpty) ...[
-                      Text(
-                        post.content,
+                      MarkdownText(
+                        data: post.content,
                         style: const TextStyle(
                           color: AppColors.textPrimary,
                           fontSize: 16,

@@ -69,16 +69,13 @@ class MarkdownText extends StatelessWidget {
     );
 
     if (selectable) {
-      return SelectableMarkdown(
-        data: data,
-        styleSheet: markdownStyleSheet,
-        onTapLink: (text, href, title) {
-          if (href != null) {
-            launchUrl(Uri.parse(href));
-          }
-        },
+      return SelectableText.rich(
+        TextSpan(
+          text: data,
+          style: defaultStyle,
+        ),
         maxLines: maxLines,
-        overflow: overflow,
+        textAlign: TextAlign.left,
       );
     }
 

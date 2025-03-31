@@ -32,10 +32,10 @@ class PostCard extends StatelessWidget {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-            // Header Section
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Row(
+                // Header Section
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Row(
                 children: [
                   CircleAvatar(
                     backgroundColor: Theme.of(context).colorScheme.primary,
@@ -334,7 +334,8 @@ class PostCard extends StatelessWidget {
                 ],
               ),
             ),
-          ],
+            ],
+          ),
         ),
       ),
     );

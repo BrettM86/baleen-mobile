@@ -26,9 +26,12 @@ class PostCard extends StatelessWidget {
     return Container(
       color: AppColors.background,
       child: SafeArea(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        child: Stack(
           children: [
+            // Main content
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
             // Header Section
             Padding(
               padding: const EdgeInsets.all(16.0),
@@ -268,6 +271,68 @@ class PostCard extends StatelessWidget {
                     ),
                   ],
                 ),
+              ),
+            ),
+            ),
+            
+            // Side action widgets
+            Positioned(
+              right: 16,
+              bottom: 120,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  // Upvote button
+                  Container(
+                    margin: const EdgeInsets.only(bottom: 12),
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      color: AppColors.cardBackground,
+                      shape: BoxShape.circle,
+                      border: Border.all(color: AppColors.border, width: 1),
+                    ),
+                    child: const Icon(
+                      Icons.keyboard_arrow_up,
+                      color: AppColors.primary,
+                      size: 24,
+                    ),
+                  ),
+                  
+                  // Score display
+                  Container(
+                    margin: const EdgeInsets.only(bottom: 12),
+                    padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 10),
+                    decoration: BoxDecoration(
+                      color: AppColors.cardBackground,
+                      borderRadius: BorderRadius.circular(16),
+                      border: Border.all(color: AppColors.border, width: 1),
+                    ),
+                    child: Text(
+                      post.score.toString(),
+                      style: const TextStyle(
+                        color: AppColors.textPrimary,
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                  
+                  // Comment button
+                  Container(
+                    margin: const EdgeInsets.only(bottom: 12),
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      color: AppColors.cardBackground,
+                      shape: BoxShape.circle,
+                      border: Border.all(color: AppColors.border, width: 1),
+                    ),
+                    child: const Icon(
+                      Icons.comment_outlined,
+                      color: AppColors.textSecondary,
+                      size: 22,
+                    ),
+                  ),
+                ],
               ),
             ),
           ],

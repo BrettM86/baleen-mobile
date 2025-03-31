@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'package:html/parser.dart' as parser;
-import 'package:url_launcher/url_launcher.dart';
 
 import '../models/post.dart';
 import '../services/lemmy_service.dart';
-
-
+import '../services/link_preview_service.dart';
+import '../widgets/post_card.dart';
+import '../widgets/side_actions.dart';
+import '../widgets/error_view.dart';
+import '../widgets/loading_view.dart';
 
 class PostListScreen extends StatefulWidget {
   const PostListScreen({super.key});
@@ -17,16 +17,13 @@ class PostListScreen extends StatefulWidget {
 
 class _PostListScreenState extends State<PostListScreen> {
   final _lemmyService = LemmyService();
+  final _linkPreviewService = LinkPreviewService();
   final _pageController = PageController();
   List<Post> _posts = [];
   bool _isLoading = true;
   String? _error;
   int _currentPage = 0;
   int _selectedIndex = 0;
-
-  // Link previews
-  Map<String, dynamic> _linkPreviews = {};
-  Map<String, bool> _loadingStates = {};
 
   @override
   void initState() {
@@ -56,70 +53,15 @@ class _PostListScreenState extends State<PostListScreen> {
       // Fetch link previews for all posts with URLs
       for (final post in posts) {
         if (post.imageUrl != null) {
-          _fetchLinkPreview(post.imageUrl!);
+          await _linkPreviewService.fetchLinkPreview(post.imageUrl!);
+          // Update state to reflect new previews
+          setState(() {});
         }
       }
     } catch (e) {
       setState(() {
         _error = e.toString();
         _isLoading = false;
-      });
-    }
-  }
-
-  Future<void> _fetchLinkPreview(String url) async {
-    if (_loadingStates[url] == true) return; // Already loading
-    
-    setState(() {
-      _loadingStates[url] = true;
-    });
-
-    try {
-      // Check if it's a Lemmy image via pictrs usage
-      if (url.contains('pictrs')) {
-        setState(() {
-          _linkPreviews[url] = {
-            'imageUrl': url,
-            'isLemmyImage': true,
-          };
-          _loadingStates[url] = false;
-        });
-        return;
-      }
-
-      final response = await http.get(Uri.parse(url));
-      if (response.statusCode == 200) {
-        final document = parser.parse(response.body);
-        final title = document.querySelector('title')?.text ?? '';
-        final description = document.querySelector('meta[name="description"]')?.attributes['content'] ?? '';
-        final imageUrl = document.querySelector('meta[property="og:image"]')?.attributes['content'] ??
-                        document.querySelector('meta[name="twitter:image"]')?.attributes['content'];
-
-        setState(() {
-          _linkPreviews[url] = {
-            'title': title,
-            'description': description,
-            'imageUrl': imageUrl,
-            'isLemmyImage': false,
-          };
-          _loadingStates[url] = false;
-        });
-      } else {
-        setState(() {
-          _linkPreviews[url] = {
-            'isLemmyImage': false,
-            'error': true,
-          };
-          _loadingStates[url] = false;
-        });
-      }
-    } catch (e) {
-      setState(() {
-        _linkPreviews[url] = {
-          'isLemmyImage': false,
-          'error': true,
-        };
-        _loadingStates[url] = false;
       });
     }
   }
@@ -163,26 +105,13 @@ class _PostListScreenState extends State<PostListScreen> {
 
   Widget _buildContent() {
     if (_isLoading) {
-      return const Center(child: CircularProgressIndicator());
+      return const LoadingView();
     }
 
     if (_error != null) {
-      return Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              'Error: $_error',
-              style: const TextStyle(color: Colors.red),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: _fetchPosts,
-              child: const Text('Retry'),
-            ),
-          ],
-        ),
+      return ErrorView(
+        message: _error!,
+        onRetry: _fetchPosts,
       );
     }
 
@@ -205,411 +134,29 @@ class _PostListScreenState extends State<PostListScreen> {
         final post = _posts[index];
         return Stack(
           children: [
-            _buildPostCard(post),
-            _buildSideActions(post),
+            PostCard(
+              post: post,
+              linkPreviews: _linkPreviewService.linkPreviews,
+              loadingStates: _linkPreviewService.loadingStates,
+            ),
+            SideActions(
+              post: post,
+              onUpvote: () {
+                // TODO: Implement upvote
+              },
+              onComment: () {
+                // TODO: Navigate to comments
+              },
+              onShare: () {
+                // TODO: Implement share
+              },
+            ),
           ],
         );
       },
     );
   }
-
-  Widget _buildPostCard(Post post) {
-    final timeAgo = _getTimeAgo(post.published);
-    
-    return Container(
-      color: const Color(0xFF1A1A1A),
-      child: SafeArea(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Header Section
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Row(
-                children: [
-                  CircleAvatar(
-                    backgroundColor: Theme.of(context).colorScheme.primary,
-                    radius: 24,
-                    child: Text(
-                      post.communityName[0].toUpperCase(),
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          post.communityName,
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        Text(
-                          'Instance Name',
-                          style: TextStyle(
-                            color: Colors.grey[400],
-                            fontSize: 12,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            
-            // Post Content
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // Headline
-                    Text(
-                      post.title,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 15,
-                        fontWeight: FontWeight.w500,
-                        height: 1.2
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                    
-                    // Image or Link Preview
-                    if (post.imageUrl != null) ...[
-                      _buildImageOrLinkPreview(post.imageUrl!),
-                      const SizedBox(height: 2),
-                    ],
-                    
-                    // Post Metadata Section
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          // Left side: Username
-                          GestureDetector(
-                            onTap: () {
-                              // TODO: Navigate to user profile
-                            },
-                            child: Text(
-                              post.authorName,
-                              style: TextStyle(
-                                color: Colors.grey[400],
-                                fontSize: 14,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                          ),
-                          
-                          // Right side: Stats and time
-                          Row(
-                            children: [
-                              // Upvote count
-                              Row(
-                                children: [
-                                  Icon(
-                                    Icons.arrow_upward,
-                                    size: 16,
-                                    color: Colors.grey[400],
-                                  ),
-                                  const SizedBox(width: 4),
-                                  Text(
-                                    post.score.toString(),
-                                    style: TextStyle(
-                                      color: Colors.grey[400],
-                                      fontSize: 12,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(width: 16),
-                              
-                              // Comment count
-                              Row(
-                                children: [
-                                  Icon(
-                                    Icons.comment_outlined,
-                                    size: 16,
-                                    color: Colors.grey[400],
-                                  ),
-                                  const SizedBox(width: 4),
-                                  Text(
-                                    post.commentCount.toString(),
-                                    style: TextStyle(
-                                      color: Colors.grey[400],
-                                      fontSize: 12,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(width: 6),
-                              
-                              // Time posted with clock icon
-                              Row(
-                                children: [
-                                  Icon(
-                                    Icons.access_time,
-                                    size: 16,
-                                    color: Colors.grey[400],
-                                  ),
-                                  const SizedBox(width: 2),
-                                  Text(
-                                    timeAgo,
-                                    style: TextStyle(
-                                      color: Colors.grey[400],
-                                      fontSize: 12,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                    
-                    // Divider
-                    Container(
-                      height: 1,
-                      margin: const EdgeInsets.symmetric(vertical: 2),
-                      color: Colors.grey[800],
-                    ),
-                    
-                    // Excerpt / Body Snippet
-                    if (post.content.isNotEmpty) ...[
-                      Text(
-                        post.content,
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 16,
-                          height: 1.5,
-                        ),
-                        maxLines: 5,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      const SizedBox(height: 16),
-                    ],
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildImageOrLinkPreview(String url) {
-    final preview = _linkPreviews[url];
-    final isLoading = _loadingStates[url] == true;
-    
-    // If it's a Lemmy image, show it as a full-width image
-    if (preview != null && preview['isLemmyImage'] == true) {
-      return ClipRRect(
-        borderRadius: BorderRadius.circular(12),
-        child: Image.network(
-          preview['imageUrl']!,
-          fit: BoxFit.contain,
-          width: double.infinity,
-          height: 600,
-          errorBuilder: (context, error, stackTrace) {
-            return Container(
-              height: 200,
-              color: Colors.grey[800],
-              child: const Icon(Icons.error, color: Colors.white),
-            );
-          },
-        ),
-      );
-    }
-    
-    // For external links, show the preview container
-    return GestureDetector(
-      onTap: () async {
-        if (await canLaunch(url)) {
-          await launch(url);
-        }
-      },
-      child: Container(
-        decoration: BoxDecoration(
-          border: Border.all(color: Colors.grey[800]!),
-          borderRadius: BorderRadius.circular(12),
-        ),
-        clipBehavior: Clip.hardEdge,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            // Preview Image
-            if (isLoading)
-              Container(
-                height: 200,
-                color: Colors.grey[800],
-                child: const Center(child: CircularProgressIndicator()),
-              )
-            else if (preview != null && preview['imageUrl'] != null)
-              ClipRRect(
-                borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
-                child: Image.network(
-                  preview['imageUrl']!,
-                  fit: BoxFit.cover,
-                  width: double.infinity,
-                  height: 200,
-                  errorBuilder: (context, error, stackTrace) {
-                    return Container(
-                      height: 200,
-                      color: Colors.grey[800],
-                      child: const Icon(Icons.error, color: Colors.white),
-                    );
-                  },
-                ),
-              )
-            else
-              Container(
-                height: 120,
-                color: Colors.grey[800],
-                child: const Center(child: Icon(Icons.link, color: Colors.white, size: 48)),
-              ),
-            
-            // Preview Text
-            Container(
-              width: double.infinity,
-              color: Colors.grey[800],
-              padding: const EdgeInsets.all(10),
-              child: Row(
-                children: [
-                  Icon(
-                    Icons.link,
-                    size: 12,
-                    color: Colors.grey[400],
-                  ),
-                  const SizedBox(width: 4),
-                  Text(
-                    _getDomainFromUrl(url),
-                    style: TextStyle(
-                      color: Colors.grey[400],
-                      fontSize: 12,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-  
-  // Helper to extract domain from URL
-  String _getDomainFromUrl(String url) {
-    try {
-      final uri = Uri.parse(url);
-      return uri.host;
-    } catch (e) {
-      return url;
-    }
-  }
-
-
-
-  String _getTimeAgo(DateTime published) {
-    final now = DateTime.now();
-    final difference = now.difference(published);
-    if (difference.inMinutes < 60)
-      return '${difference.inMinutes}m';
-    if (difference.inHours < 24) {
-      return '${difference.inHours}h';
-    } else {
-      return '${difference.inDays}d';
-    }
-  }
-
-  Widget _buildSideActions(Post post) {
-    return Positioned(
-      right: 16,
-      bottom: 100,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          _buildSideActionButton(
-            icon: Icons.arrow_upward,
-            label: post.score.toString(),
-            onPressed: () {
-              // TODO: Implement upvote
-            },
-          ),
-          const SizedBox(height: 16),
-          _buildSideActionButton(
-            icon: Icons.comment,
-            label: '${post.commentCount}',
-            onPressed: () {
-              // TODO: Navigate to comments
-            },
-          ),
-          const SizedBox(height: 16),
-          _buildSideActionButton(
-            icon: Icons.share,
-            label: 'Share',
-            onPressed: () {
-              // TODO: Implement share
-            },
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildSideActionButton({
-    required IconData icon,
-    required String label,
-    required VoidCallback onPressed,
-  }) {
-    return InkWell(
-      onTap: onPressed,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(
-            icon,
-            color: Colors.white.withAlpha(230),
-            size: 28,
-            shadows: [
-              Shadow(
-                color: Colors.black.withAlpha(77),
-                offset: const Offset(0, 2),
-                blurRadius: 3,
-              ),
-            ],
-          ),
-          const SizedBox(height: 4),
-          Text(
-            label,
-            style: TextStyle(
-              color: Colors.white,
-              shadows: [
-                Shadow(
-                  color: Colors.black.withAlpha(77),
-                  offset: const Offset(0, 2),
-                  blurRadius: 3,
-                ),
-              ],
-            ),
-          )
-        ],
-      ),
-    );
-  }
-} import 'package:flutter/material.dart';
+}
 
 import '../models/post.dart';
 import '../services/lemmy_service.dart';

@@ -273,44 +273,14 @@ class _PostListScreenState extends State<PostListScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // User and Source Info Line
-                    Row(
-                      children: [
-                        Text(
-                          post.authorName,
-                          style: TextStyle(
-                            color: Colors.grey[400],
-                            fontSize: 14,
-                          ),
-                        ),
-                        const SizedBox(width: 8),
-                        Text(
-                          '•',
-                          style: TextStyle(
-                            color: Colors.grey[400],
-                            fontSize: 14,
-                          ),
-                        ),
-                        const SizedBox(width: 8),
-                        Text(
-                          timeAgo,
-                          style: TextStyle(
-                            color: Colors.grey[400],
-                            fontSize: 14,
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 16),
-                    
                     // Headline
                     Text(
                       post.title,
                       style: const TextStyle(
                         color: Colors.white,
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                        height: 1.3,
+                        fontSize: 15,
+                        fontWeight: FontWeight.w500,
+                        height: 1.2
                       ),
                     ),
                     const SizedBox(height: 16),
@@ -318,8 +288,103 @@ class _PostListScreenState extends State<PostListScreen> {
                     // Image or Link Preview
                     if (post.imageUrl != null) ...[
                       _buildImageOrLinkPreview(post.imageUrl!),
-                      const SizedBox(height: 16),
+                      const SizedBox(height: 2),
                     ],
+                    
+                    // Post Metadata Section
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          // Left side: Username
+                          GestureDetector(
+                            onTap: () {
+                              // TODO: Navigate to user profile
+                            },
+                            child: Text(
+                              post.authorName,
+                              style: TextStyle(
+                                color: Colors.grey[400],
+                                fontSize: 14,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ),
+                          
+                          // Right side: Stats and time
+                          Row(
+                            children: [
+                              // Upvote count
+                              Row(
+                                children: [
+                                  Icon(
+                                    Icons.arrow_upward,
+                                    size: 16,
+                                    color: Colors.grey[400],
+                                  ),
+                                  const SizedBox(width: 4),
+                                  Text(
+                                    post.score.toString(),
+                                    style: TextStyle(
+                                      color: Colors.grey[400],
+                                      fontSize: 12,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(width: 16),
+                              
+                              // Comment count
+                              Row(
+                                children: [
+                                  Icon(
+                                    Icons.comment_outlined,
+                                    size: 16,
+                                    color: Colors.grey[400],
+                                  ),
+                                  const SizedBox(width: 4),
+                                  Text(
+                                    post.commentCount.toString(),
+                                    style: TextStyle(
+                                      color: Colors.grey[400],
+                                      fontSize: 12,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(width: 6),
+                              
+                              // Time posted with clock icon
+                              Row(
+                                children: [
+                                  Icon(
+                                    Icons.access_time,
+                                    size: 16,
+                                    color: Colors.grey[400],
+                                  ),
+                                  const SizedBox(width: 2),
+                                  Text(
+                                    timeAgo,
+                                    style: TextStyle(
+                                      color: Colors.grey[400],
+                                      fontSize: 12,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                    
+                    // Divider
+                    Container(
+                      height: 1,
+                      margin: const EdgeInsets.symmetric(vertical: 2),
+                      color: Colors.grey[800],
+                    ),
                     
                     // Excerpt / Body Snippet
                     if (post.content.isNotEmpty) ...[
@@ -383,7 +448,7 @@ class _PostListScreenState extends State<PostListScreen> {
         ),
         clipBehavior: Clip.hardEdge,
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             // Preview Image
             if (isLoading)
@@ -417,35 +482,18 @@ class _PostListScreenState extends State<PostListScreen> {
               ),
             
             // Preview Text
-            Padding(
-              padding: const EdgeInsets.all(12),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+            Container(
+              width: double.infinity,
+              color: Colors.grey[800],
+              padding: const EdgeInsets.all(10),
+              child: Row(
                 children: [
-                  if (!isLoading && preview != null && preview['title'] != null)
-                    Text(
-                      preview['title']!,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  if (!isLoading && preview != null && preview['description'] != null) ...[
-                    const SizedBox(height: 4),
-                    Text(
-                      preview['description']!,
-                      style: TextStyle(
-                        color: Colors.grey[400],
-                        fontSize: 14,
-                      ),
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ],
-                  const SizedBox(height: 8),
+                  Icon(
+                    Icons.link,
+                    size: 12,
+                    color: Colors.grey[400],
+                  ),
+                  const SizedBox(width: 4),
                   Text(
                     _getDomainFromUrl(url),
                     style: TextStyle(
@@ -533,11 +581,11 @@ class _PostListScreenState extends State<PostListScreen> {
         children: [
           Icon(
             icon,
-            color: Colors.white.withOpacity(0.9),
+            color: Colors.white.withAlpha(230),
             size: 28,
             shadows: [
               Shadow(
-                color: Colors.black.withOpacity(0.3),
+                color: Colors.black.withAlpha(77),
                 offset: const Offset(0, 2),
                 blurRadius: 3,
               ),
@@ -550,7 +598,7 @@ class _PostListScreenState extends State<PostListScreen> {
               color: Colors.white,
               shadows: [
                 Shadow(
-                  color: Colors.black.withOpacity(0.3),
+                  color: Colors.black.withAlpha(77),
                   offset: const Offset(0, 2),
                   blurRadius: 3,
                 ),

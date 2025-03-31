@@ -21,68 +21,49 @@ class SideActions extends StatelessWidget {
     return Positioned(
       right: 16,
       bottom: 100,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          _buildSideActionButton(
-            icon: Icons.arrow_upward,
-            label: post.score.toString(),
-            onPressed: onUpvote,
-          ),
-          const SizedBox(height: 16),
-          _buildSideActionButton(
-            icon: Icons.comment,
-            label: '${post.commentCount}',
-            onPressed: onComment,
-          ),
-          const SizedBox(height: 16),
-          _buildSideActionButton(
-            icon: Icons.share,
-            label: 'Share',
-            onPressed: onShare,
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildSideActionButton({
-    required IconData icon,
-    required String label,
-    required VoidCallback? onPressed,
-  }) {
-    return InkWell(
-      onTap: onPressed,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(
-            icon,
-            color: AppColors.textPrimary.withAlpha(230),
-            size: 28,
-            shadows: [
-              Shadow(
-                color: Colors.black.withAlpha(77),
-                offset: const Offset(0, 2),
-                blurRadius: 3,
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+        decoration: BoxDecoration(
+          color: AppColors.cardBackground,
+          borderRadius: BorderRadius.circular(24),
+          border: Border.all(color: AppColors.border, width: 1),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // Upvote button
+            GestureDetector(
+              onTap: onUpvote,
+              child: const Icon(
+                Icons.keyboard_arrow_up,
+                color: AppColors.primary,
+                size: 24,
               ),
-            ],
-          ),
-          const SizedBox(height: 4),
-          Text(
-            label,
-            style: TextStyle(
-              color: AppColors.textPrimary,
-              shadows: [
-                Shadow(
-                  color: Colors.black.withAlpha(77),
-                  offset: const Offset(0, 2),
-                  blurRadius: 3,
-                ),
-              ],
             ),
-          )
-        ],
+            const SizedBox(height: 16),
+            
+            // Comment button
+            GestureDetector(
+              onTap: onComment,
+              child: const Icon(
+                Icons.comment_outlined,
+                color: AppColors.textSecondary,
+                size: 22,
+              ),
+            ),
+            const SizedBox(height: 16),
+
+            // Share button
+            GestureDetector(
+              onTap: onShare,
+              child: const Icon(
+                Icons.share_outlined,
+                color: AppColors.textSecondary,
+                size: 22,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

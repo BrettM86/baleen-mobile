@@ -6,6 +6,7 @@ import '../utils/time_utils.dart';
 import '../utils/url_utils.dart';
 import '../constants/app_colors.dart';
 import 'markdown_text.dart';
+import 'side_actions.dart';
 
 class PostCard extends StatelessWidget {
   final Post post;
@@ -26,18 +27,14 @@ class PostCard extends StatelessWidget {
     return Container(
       color: AppColors.background,
       child: SafeArea(
-        child: Stack(
+        child: Column(
           children: [
-            // Main content
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Header Section
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Row(
-                    children: [
-                      CircleAvatar(
+            // Header Section
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Row(
+                children: [
+                  CircleAvatar(
                     backgroundColor: Theme.of(context).colorScheme.primary,
                     radius: 24,
                     child: Text(
@@ -76,260 +73,215 @@ class PostCard extends StatelessWidget {
               ),
             ),
             
-            // Post Content
+            // Main Content
             Expanded(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // Headline
-                    Text(
-                      post.title,
-                      style: const TextStyle(
-                        color: AppColors.textPrimary,
-                        fontSize: 15,
-                        fontWeight: FontWeight.w500,
-                        height: 1.2
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                    
-                    // Image or Link Preview
-                    if (post.imageUrl != null) ...[
-                      _buildImageOrLinkPreview(post.imageUrl!),
-                      const SizedBox(height: 2),
-                    ],
-                    
-                    // Excerpt / Body Snippet with Markdown
-                    if (post.content.isNotEmpty) ...[
-                      LayoutBuilder(
-                        builder: (context, constraints) {
-                          return Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Stack(
+              child: Stack(
+                children: [
+                  // Post Content
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // Headline
+                        Text(
+                          post.title,
+                          style: const TextStyle(
+                            color: AppColors.textPrimary,
+                            fontSize: 15,
+                            fontWeight: FontWeight.w500,
+                            height: 1.2
+                          ),
+                        ),
+                        const SizedBox(height: 16),
+                        
+                        // Image or Link Preview
+                        if (post.imageUrl != null) ...[
+                          _buildImageOrLinkPreview(post.imageUrl!),
+                          const SizedBox(height: 2),
+                        ],
+                        
+                        // Excerpt / Body Snippet with Markdown
+                        if (post.content.isNotEmpty) ...[
+                          LayoutBuilder(
+                            builder: (context, constraints) {
+                              return Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  MarkdownText(
-                                    data: post.content,
-                                    style: const TextStyle(
-                                      color: AppColors.textPrimary,
-                                      fontSize: 13,
-                                      height: 1.5,
-                                    ),
-                                    maxLines: 8,
-                                    overflow: TextOverflow.fade,
-                                  ),
-                                  if (post.content.split('\n').length > 5 || post.content.length > 300)
-                                    Positioned(
-                                      left: 0,
-                                      right: 0,
-                                      bottom: 0,
-                                      child: Container(
-                                        height: 60,
-                                        decoration: BoxDecoration(
-                                          gradient: LinearGradient(
-                                            begin: Alignment.topCenter,
-                                            end: Alignment.bottomCenter,
-                                            colors: [
-                                              AppColors.background.withOpacity(0.0),
-                                              AppColors.background.withOpacity(0.8),
-                                              AppColors.background,
-                                            ],
-                                            stops: const [0.0, 0.7, 1.0],
-                                          ),
+                                  Stack(
+                                    children: [
+                                      MarkdownText(
+                                        data: post.content,
+                                        style: const TextStyle(
+                                          color: AppColors.textPrimary,
+                                          fontSize: 13,
+                                          height: 1.5,
                                         ),
-                                        alignment: Alignment.bottomCenter,
-                                        child: Padding(
-                                          padding: const EdgeInsets.only(bottom: 8),
-                                          child: GestureDetector(
-                                            onTap: () {
-                                              // TODO: Implement read more functionality
-                                            },
-                                            child: Container(
-                                              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                                              decoration: BoxDecoration(
-                                                color: AppColors.cardBackground,
-                                                borderRadius: BorderRadius.circular(4),
-                                                border: Border.all(color: AppColors.border),
+                                        maxLines: 8,
+                                        overflow: TextOverflow.fade,
+                                      ),
+                                      if (post.content.split('\n').length > 5 || post.content.length > 300)
+                                        Positioned(
+                                          left: 0,
+                                          right: 0,
+                                          bottom: 0,
+                                          child: Container(
+                                            height: 60,
+                                            decoration: BoxDecoration(
+                                              gradient: LinearGradient(
+                                                begin: Alignment.topCenter,
+                                                end: Alignment.bottomCenter,
+                                                colors: [
+                                                  AppColors.background.withOpacity(0.0),
+                                                  AppColors.background.withOpacity(0.8),
+                                                  AppColors.background,
+                                                ],
+                                                stops: const [0.0, 0.7, 1.0],
                                               ),
-                                              child: const Text(
-                                                'Expand',
-                                                style: TextStyle(
-                                                  color: AppColors.primary,
-                                                  fontSize: 12,
-                                                  fontWeight: FontWeight.w500,
+                                            ),
+                                            alignment: Alignment.bottomCenter,
+                                            child: Padding(
+                                              padding: const EdgeInsets.only(bottom: 8),
+                                              child: GestureDetector(
+                                                onTap: () {
+                                                  // TODO: Implement read more functionality
+                                                },
+                                                child: Container(
+                                                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                                                  decoration: BoxDecoration(
+                                                    color: AppColors.cardBackground,
+                                                    borderRadius: BorderRadius.circular(4),
+                                                    border: Border.all(color: AppColors.border),
+                                                  ),
+                                                  child: const Text(
+                                                    'Expand',
+                                                    style: TextStyle(
+                                                      color: AppColors.primary,
+                                                      fontSize: 12,
+                                                      fontWeight: FontWeight.w500,
+                                                    ),
+                                                  ),
                                                 ),
                                               ),
                                             ),
                                           ),
                                         ),
-                                      ),
-                                    ),
+                                    ],
+                                  ),
                                 ],
-                              ),
-                            ],
-                          );
-                        },
-                      ),
-                      const SizedBox(height: 16),
-                    ],
-                    
-                    // Divider
-                    Container(
-                      height: 1,
-                      margin: const EdgeInsets.symmetric(vertical: 2),
-                      color: AppColors.divider,
-                    ),
-                    
-                    // Post Metadata Section
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          // Left side: Username
-                          GestureDetector(
-                            onTap: () {
-                              // TODO: Navigate to user profile
+                              );
                             },
-                            child: Text(
-                              post.authorName,
-                              style: const TextStyle(
-                                color: AppColors.textSecondary,
-                                fontSize: 14,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
                           ),
-                          
-                          // Right side: Stats and time
-                          Row(
+                          const SizedBox(height: 16),
+                        ],
+                        
+                        // Divider
+                        Container(
+                          height: 1,
+                          margin: const EdgeInsets.symmetric(vertical: 2),
+                          color: AppColors.divider,
+                        ),
+                        
+                        // Post Metadata Section
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              // Upvote count
-                              Row(
-                                children: [
-                                  const Icon(
-                                    Icons.arrow_upward,
-                                    size: 16,
+                              // Left side: Username
+                              GestureDetector(
+                                onTap: () {
+                                  // TODO: Navigate to user profile
+                                },
+                                child: Text(
+                                  post.authorName,
+                                  style: const TextStyle(
                                     color: AppColors.textSecondary,
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w600,
                                   ),
-                                  const SizedBox(width: 4),
-                                  Text(
-                                    post.score.toString(),
-                                    style: const TextStyle(
-                                      color: AppColors.textSecondary,
-                                      fontSize: 12,
-                                    ),
-                                  ),
-                                ],
+                                ),
                               ),
-                              const SizedBox(width: 16),
                               
-                              // Comment count
+                              // Right side: Stats and time
                               Row(
                                 children: [
-                                  const Icon(
-                                    Icons.comment_outlined,
-                                    size: 16,
-                                    color: AppColors.textSecondary,
+                                  // Upvote count
+                                  Row(
+                                    children: [
+                                      const Icon(
+                                        Icons.arrow_upward,
+                                        size: 16,
+                                        color: AppColors.textSecondary,
+                                      ),
+                                      const SizedBox(width: 4),
+                                      Text(
+                                        post.score.toString(),
+                                        style: const TextStyle(
+                                          color: AppColors.textSecondary,
+                                          fontSize: 12,
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                  const SizedBox(width: 4),
-                                  Text(
-                                    post.commentCount.toString(),
-                                    style: const TextStyle(
-                                      color: AppColors.textSecondary,
-                                      fontSize: 12,
-                                    ),
+                                  const SizedBox(width: 16),
+                                  
+                                  // Comment count
+                                  Row(
+                                    children: [
+                                      const Icon(
+                                        Icons.comment_outlined,
+                                        size: 16,
+                                        color: AppColors.textSecondary,
+                                      ),
+                                      const SizedBox(width: 4),
+                                      Text(
+                                        post.commentCount.toString(),
+                                        style: const TextStyle(
+                                          color: AppColors.textSecondary,
+                                          fontSize: 12,
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                ],
-                              ),
-                              const SizedBox(width: 6),
-                              
-                              // Time posted with clock icon
-                              Row(
-                                children: [
-                                  const Icon(
-                                    Icons.access_time,
-                                    size: 16,
-                                    color: AppColors.textSecondary,
-                                  ),
-                                  const SizedBox(width: 2),
-                                  Text(
-                                    timeAgo,
-                                    style: const TextStyle(
-                                      color: AppColors.textSecondary,
-                                      fontSize: 12,
-                                    ),
+                                  const SizedBox(width: 6),
+                                  
+                                  // Time posted with clock icon
+                                  Row(
+                                    children: [
+                                      const Icon(
+                                        Icons.access_time,
+                                        size: 16,
+                                        color: AppColors.textSecondary,
+                                      ),
+                                      const SizedBox(width: 2),
+                                      Text(
+                                        timeAgo,
+                                        style: const TextStyle(
+                                          color: AppColors.textSecondary,
+                                          fontSize: 12,
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ],
                               ),
                             ],
                           ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            
-            // Side action widgets
-            Positioned(
-              right: 16,
-              bottom: 120,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  // Upvote button
-                  Container(
-                    margin: const EdgeInsets.only(bottom: 12),
-                    padding: const EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                      color: AppColors.cardBackground,
-                      shape: BoxShape.circle,
-                      border: Border.all(color: AppColors.border, width: 1),
-                    ),
-                    child: const Icon(
-                      Icons.keyboard_arrow_up,
-                      color: AppColors.primary,
-                      size: 24,
+                        ),
+                      ],
                     ),
                   ),
                   
-                  // Score display
-                  Container(
-                    margin: const EdgeInsets.only(bottom: 12),
-                    padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 10),
-                    decoration: BoxDecoration(
-                      color: AppColors.cardBackground,
-                      borderRadius: BorderRadius.circular(16),
-                      border: Border.all(color: AppColors.border, width: 1),
-                    ),
-                    child: Text(
-                      post.score.toString(),
-                      style: const TextStyle(
-                        color: AppColors.textPrimary,
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                  
-                  // Comment button
-                  Container(
-                    margin: const EdgeInsets.only(bottom: 12),
-                    padding: const EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                      color: AppColors.cardBackground,
-                      shape: BoxShape.circle,
-                      border: Border.all(color: AppColors.border, width: 1),
-                    ),
-                    child: const Icon(
-                      Icons.comment_outlined,
-                      color: AppColors.textSecondary,
-                      size: 22,
-                    ),
+                  // Side action widgets
+                  SideActions(
+                    post: post,
+                    onUpvote: () {
+                      // TODO: Implement upvote functionality
+                    },
+                    onComment: () {
+                      // TODO: Implement comment functionality
+                    },
                   ),
                 ],
               ),

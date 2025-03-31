@@ -357,7 +357,7 @@ class _PostListScreenState extends State<PostListScreen> {
           preview['imageUrl']!,
           fit: BoxFit.contain,
           width: double.infinity,
-          height: 300,
+          height: 600,
           errorBuilder: (context, error, stackTrace) {
             return Container(
               height: 200,
@@ -489,7 +489,7 @@ class _PostListScreenState extends State<PostListScreen> {
   Widget _buildSideActions(Post post) {
     return Positioned(
       right: 16,
-      bottom: 200,
+      bottom: 100,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -531,12 +531,32 @@ class _PostListScreenState extends State<PostListScreen> {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon, color: Colors.white),
+          Icon(
+            icon,
+            color: Colors.white,
+            size: 28,
+            shadows: [
+              Shadow(
+                color: Colors.black.withOpacity(0.3),
+                offset: const Offset(0, 2),
+                blurRadius: 3,
+              ),
+            ],
+          ),
           const SizedBox(height: 4),
           Text(
             label,
-            style: const TextStyle(color: Colors.white),
-          ),
+            style: TextStyle(
+              color: Colors.white,
+              shadows: [
+                Shadow(
+                  color: Colors.black.withOpacity(0.3),
+                  offset: const Offset(0, 2),
+                  blurRadius: 3,
+                ),
+              ],
+            ),
+          )
         ],
       ),
     );

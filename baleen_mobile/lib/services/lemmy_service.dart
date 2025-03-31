@@ -10,7 +10,7 @@ class LemmyService {
   Future<List<Post>> getPosts({
     int page = 1,
     int limit = 20,
-    lemmy.SortType sortType = lemmy.SortType.hot,
+    lemmy.SortType sortType = lemmy.SortType.active,
   }) async {
     try {
       final response = await _api.run(

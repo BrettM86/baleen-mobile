@@ -104,7 +104,7 @@ class PostCard extends StatelessWidget {
                         data: post.content,
                         style: const TextStyle(
                           color: AppColors.textPrimary,
-                          fontSize: 16,
+                          fontSize: 13,
                           height: 1.5,
                         ),
                         maxLines: 5,

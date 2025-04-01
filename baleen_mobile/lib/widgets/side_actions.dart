@@ -48,7 +48,7 @@ class SideActions extends StatelessWidget {
               child: const Icon(
                 Icons.comment_outlined,
                 color: AppColors.textSecondary,
-                size: 22,
+                size: 24,
               ),
             ),
             const SizedBox(height: 16),
@@ -59,7 +59,7 @@ class SideActions extends StatelessWidget {
               child: const Icon(
                 Icons.share_outlined,
                 color: AppColors.textSecondary,
-                size: 22,
+                size: 24,
               ),
             ),
           ],

@@ -4,7 +4,6 @@ import '../models/post.dart';
 import '../services/lemmy_service.dart';
 import '../services/link_preview_service.dart';
 import '../widgets/post_card.dart';
-import '../widgets/side_actions.dart';
 import '../widgets/error_view.dart';
 import '../widgets/loading_view.dart';
 import '../constants/app_colors.dart';
@@ -133,26 +132,10 @@ class _PostListScreenState extends State<PostListScreen> {
       },
       itemBuilder: (context, index) {
         final post = _posts[index];
-        return Stack(
-          children: [
-            PostCard(
-              post: post,
-              linkPreviews: _linkPreviewService.linkPreviews,
-              loadingStates: _linkPreviewService.loadingStates,
-            ),
-            SideActions(
-              post: post,
-              onUpvote: () {
-                // TODO: Implement upvote
-              },
-              onComment: () {
-                // TODO: Navigate to comments
-              },
-              onShare: () {
-                // TODO: Implement share
-              },
-            ),
-          ],
+        return PostCard(
+          post: post,
+          linkPreviews: _linkPreviewService.linkPreviews,
+          loadingStates: _linkPreviewService.loadingStates,
         );
       },
     );

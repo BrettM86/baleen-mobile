@@ -7,6 +7,7 @@ class SideActions extends StatelessWidget {
   final VoidCallback? onUpvote;
   final VoidCallback? onComment;
   final VoidCallback? onShare;
+  final VoidCallback? onFavorite;
 
   const SideActions({
     super.key,
@@ -14,35 +15,46 @@ class SideActions extends StatelessWidget {
     this.onUpvote,
     this.onComment,
     this.onShare,
+    this.onFavorite,
   });
 
   @override
   Widget build(BuildContext context) {
     return Positioned(
+      left: 16,
       right: 16,
-      bottom: 100,
+      bottom: 20,
       child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
         decoration: BoxDecoration(
           color: AppColors.cardBackground,
           borderRadius: BorderRadius.circular(24),
           border: Border.all(color: AppColors.border, width: 1),
         ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            // Upvote button
+            // Share button (left)
             GestureDetector(
-              onTap: onUpvote,
+              onTap: onShare,
               child: const Icon(
-                Icons.keyboard_arrow_up,
-                color: AppColors.primary,
+                Icons.share_outlined,
+                color: AppColors.textSecondary,
                 size: 24,
               ),
             ),
-            const SizedBox(height: 16),
             
-            // Comment button
+            // Favorite/Bookmark button
+            GestureDetector(
+              onTap: onFavorite,
+              child: const Icon(
+                Icons.bookmark_border_outlined,
+                color: AppColors.textSecondary,
+                size: 24,
+              ),
+            ),
+            
+            // Comment button (middle)
             GestureDetector(
               onTap: onComment,
               child: const Icon(
@@ -51,14 +63,13 @@ class SideActions extends StatelessWidget {
                 size: 24,
               ),
             ),
-            const SizedBox(height: 16),
-
-            // Share button
+            
+            // Upvote button (right)
             GestureDetector(
-              onTap: onShare,
+              onTap: onUpvote,
               child: const Icon(
-                Icons.share_outlined,
-                color: AppColors.textSecondary,
+                Icons.keyboard_arrow_up,
+                color: AppColors.primary,
                 size: 24,
               ),
             ),

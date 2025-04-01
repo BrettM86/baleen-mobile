@@ -282,6 +282,12 @@ class PostCard extends StatelessWidget {
                     onComment: () {
                       // TODO: Implement comment functionality
                     },
+                    onShare: () {
+                      // TODO: Implement share functionality
+                    },
+                    onFavorite: () {
+                      // TODO: Implement favorite functionality
+                    },
                   ),
                 ],
               ),
